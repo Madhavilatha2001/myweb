@@ -1,0 +1,78 @@
+Sonar Qube:
+->Code quality or code review code tool
+->It will clone the code from git hub, it will inspect and review continously.
+->Port number-9000
+->Dev->github->sonarqube->Code review(Quality gates through code review using rules and conditions)
+->4 types of issue -Major,minor,Critical,Blocker
+(Major,Minor- Just impact)
+(Critical,Blocker-Email to developer)
+----------------------------------------------------------------------------------------------------
+-> Take Instance name it as SOnarQube
+-> Integrate with Jenkins
+->Create Job-Result-Check Which type isssue-Mail to Dev team
+----------------------------------------------------------------------------------------------------
+->Installation:
+Take Two instances (T2.medium instances) (Jenkins and Sonar qube)
+We alredy Done Jenkins(Now we need to install Sonar Qube)
+
+->Java install
+sudo yum install -y java
+yum list | grep jdk (Select version)
+update-alternatives --config java
+-------------------------------------------------------------------------------------
+->Sonar qube install
+sudo wget -O /etc/yum.repos.d/sonar.repo http://downloads.sourceforge.net/project/sonar-pkg/rpm/sonar.repo
+sudo yum install sonar -y
+service sonar start
+PublicIP:9000 (Check in browser)
+login:Default U_ID and password- admin/admin
+Token genarate-> Pavan -> genarete->Encrypted format token (Save in notepad)
+(Skip tutorial)
+Check Severity -Issues
+---------------------------------------------------------------------------
+->Sonar Integrate with Jenkins
+Go to Jenkins Dashboard
+->we need to install sonarqube scanner plugin(take 2.8.1 version)In jenkins dash board
+->Manage Jenkins->manage plugins->advanced->deployplugin->Sonar2.8.2.hpi(updates.jenkins.io/download/pligins/sonar/)
+->Manage jenkins->configure system->sonarqube servers->add sonarqube->
+name:pavan
+url:http://IP:9000/
+Auth token:Paste(Apply-save)
+
+Now open our pom.xml give our url at
+<Properties>
+<sonar.host.url>http://IP:9000/</sonar.host.url>
+-----------------------------------------------------------------
+Now we need to create job in Jenkins
+->Job create->New Iten->freestyleSCM->git url
+Build:invoke top level maven
+goals: clean sonar:sonar(Apply-save)
+Build now->success
+Check Quality in Sonarqube Dashboard
+------------------------------------------------------
+->How to change sonarqube Port number
+This is 3rd party application 
+so, all 3rd party apps port numbers will store in "opt" directory
+->cd /opt/sonar/conf
+->vi sonar.properties
+sonar.web.port=1234(remove # before)
+(esc:wq!)
+->service sonar stop
+->service sonar start
+---------------------------------------------------
+users creation
+->go to sonar dashboard->Administration->security->users
+name:pavan
+name :pavan
+mail:
+password:pavan
+(create)
+Open in new search engine give credentials
+--------------------------------------------------
+If our token lost
+->Sonar Dashboard->Profile->My acc->security->pavan->genarate
+(Modify in Jenkins dashboard)
+----------------------------------------------------
+How to delete projects in Sonar Dash board
+->administraton->Projects->management->select our project->delete
+---------------------------------------------------
